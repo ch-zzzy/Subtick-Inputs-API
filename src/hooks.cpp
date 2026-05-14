@@ -13,7 +13,8 @@ class $modify(CCEGLView) {
 		CCNode* parent;
 
 		// clang-format off
-		if (!GetFocus() || !playLayer
+		if (!GetFocus() 
+			|| !playLayer
 			|| !(parent = playLayer->getParent())
 			|| parent->getChildByType<PauseLayer>(0)
 			|| playLayer->getChildByType<EndLevelLayer>(0)
@@ -32,8 +33,10 @@ class $modify(PlayLayer) {
 		bool result = PlayLayer::init(level, useReplay, dontCreateObjects);
 		if (!result) return false;
 
-		this->m_clickBetweenSteps = false;
-		this->m_clickOnSteps = false;
+		if (!Config::get().isModActive()) {
+			this->m_clickBetweenSteps = false;
+			this->m_clickOnSteps = false;
+		}
 
 		auto& state = ContinuousPhysicsState::get();
 		state.m_firstFrame = true;
@@ -46,6 +49,11 @@ class $modify(PlayLayer) {
 	void resetLevel() {
 		PlayLayer::resetLevel();
 
+		if (Config::get().isModActive()) {
+			this->m_clickBetweenSteps = false;
+			this->m_clickOnSteps = false;
+		}
+
 		auto& state = ContinuousPhysicsState::get();
 		state.m_firstFrame = true;
 		state.m_player1.m_lastEventTimestamp = this->m_timestamp;
@@ -57,13 +65,11 @@ class $modify(GJBaseGameLayer) {
 	int checkCollisions(PlayerObject* object, float dt, bool ignoreDamage) {
 		int result = GJBaseGameLayer::checkCollisions(object, dt, ignoreDamage);
 
-		if (Config::get().isModActive()) {
-			auto* playLayer = PlayLayer::get();
-			auto& physicsState = ContinuousPhysicsState::get();
-			auto* playerState = physicsState.tryGetPlayerState(object);
-
-			if (playLayer && playerState) {
-				playerState->m_lastEventTimestamp = playLayer->m_timestamp;
+		if (!useVanillaPhysics()) {
+			auto* playerState =
+				ContinuousPhysicsState::get().tryGetPlayerState(object);
+			if (playerState) {
+				playerState->m_lastEventTimestamp = this->m_timestamp;
 			}
 		}
 
@@ -71,43 +77,32 @@ class $modify(GJBaseGameLayer) {
 	}
 
 	void update(float dt) {
-		PlayLayer* playLayer = PlayLayer::get();
-		auto& physicsState = ContinuousPhysicsState::get();
+		auto& state = ContinuousPhysicsState::get();
 
-		if (!Config::get().isModActive() || !playLayer ||
-			!playLayer->m_player1 || this->m_isPlatformer ||
-			this->m_useReplay) {
-			GJBaseGameLayer::update(dt);
-			return;
-		}
-
-		if (physicsState.m_firstFrame) {
-			physicsState.m_firstFrame = false;
-			GJBaseGameLayer::update(dt);
-			physicsState.m_player1.m_lastEventTimestamp = this->m_timestamp;
-			physicsState.m_player2.m_lastEventTimestamp = this->m_timestamp;
-			return;
-		}
-
-		if (playLayer->m_playerDied) {
-			physicsState.m_firstFrame = true;
-			GJBaseGameLayer::update(dt);
-			return;
+		if (PlayLayer::get() && PlayLayer::get()->m_playerDied) {
+			state.m_firstFrame = true;
 		}
 
 		GJBaseGameLayer::update(dt);
 
-		double frameEnd = this->m_timestamp;
-		PlayerObject* p1 = playLayer->m_player1;
-		PlayerObject* p2 = playLayer->m_gameState.m_isDualMode
-			? playLayer->m_player2
-			: nullptr;
+		if (useVanillaPhysics()) {
+			state.m_player1.m_lastEventTimestamp = this->m_timestamp;
+			state.m_player2.m_lastEventTimestamp = this->m_timestamp;
+			if (state.m_firstFrame) {
+				state.m_firstFrame = false;
+			}
+			return;
+		}
+
+		PlayerObject* p1 = this->m_player1;
+		PlayerObject* p2 =
+			this->m_gameState.m_isDualMode ? this->m_player2 : nullptr;
 
 		advancePlayerToTimestamp(
-			p1, frameEnd, physicsState.m_player1.m_lastEventTimestamp);
+			p1, this->m_timestamp, state.m_player1.m_lastEventTimestamp);
 		if (p2) {
 			advancePlayerToTimestamp(
-				p2, frameEnd, physicsState.m_player2.m_lastEventTimestamp);
+				p2, this->m_timestamp, state.m_player2.m_lastEventTimestamp);
 		}
 	}
 };

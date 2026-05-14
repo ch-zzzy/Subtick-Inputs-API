@@ -92,6 +92,10 @@ namespace continuousphysics {
 	};
 
 	namespace physics {
+		/// @brief whether to skip continuous physics logic and use vanilla behavior
+		/// @return true if playLayer is null, mod is disabled, first frame after
+		/// pause/death/init, player died, platformer mode, or robtop's replay mode
+		CP_API bool useVanillaPhysics();
 
 		/// @brief updates the player's position to where it should be at the given timestamp
 		/// based on the time since the last event
@@ -117,11 +121,6 @@ namespace continuousphysics {
 
 	namespace tick {
 
-		/// @brief whether to use vanilla PlayerObject::update(dt)
-		/// and skip the continuous physics logic in preTick and postTick
-		/// @return true if player is not in platformer mode or if playLayer is null or mod is disabled, false otherwise
-		CP_API bool useVanillaTick(PlayerObject* player);
-
 		/// @brief called before PlayerObject::update(dt) to pre-compensate gravity
 		CP_API void preTick(PlayerObject* player);
 
@@ -136,5 +135,13 @@ namespace continuousphysics {
 		CP_API void toggleVelocityUnroundingPatches(bool enable);
 
 	} // namespace patches
+
+	namespace prelude {
+		using namespace continuousphysics;
+		using namespace continuousphysics::input;
+		using namespace continuousphysics::patches;
+		using namespace continuousphysics::physics;
+		using namespace continuousphysics::tick;
+	} // namespace prelude
 
 } // namespace continuousphysics

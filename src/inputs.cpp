@@ -44,5 +44,7 @@ namespace continuousphysics::input {
 
 			nextInputCheck += inputCheckInterval;
 		}
+
+		advancePlayerToTimestamp(player, tickEnd, lastEventTimestamp);
 	}
 } // namespace continuousphysics::input

@@ -2,12 +2,6 @@
 
 namespace continuousphysics::tick {
 
-	bool useVanillaTick(PlayerObject* player) {
-		PlayLayer* playLayer = PlayLayer::get();
-		return !playLayer || !Config::get().isModActive() ||
-			playLayer->m_isPlatformer;
-	}
-
 	void preTick(PlayerObject* player) {
 		/*
 			pre-compensate gravity: add what vanilla will subtract

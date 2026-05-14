@@ -4,6 +4,18 @@ using namespace continuousphysics;
 
 namespace continuousphysics::physics {
 
+	bool useVanillaPhysics() {
+		// clang-format off
+		PlayLayer* playLayer = PlayLayer::get();
+		return !playLayer 
+		|| !Config::get().isModActive() 
+		|| ContinuousPhysicsState::get().m_firstFrame 
+		|| playLayer->m_playerDied 
+		|| playLayer->m_isPlatformer 
+		|| playLayer->m_useReplay;
+		// clang-format on
+	}
+
 	double quantizeYVelocity(double velocity) {
 		velocity = std::clamp(velocity, -1000.0, 1000.0);
 
@@ -95,9 +107,7 @@ namespace continuousphysics::physics {
 		float scaledDt = 60.0f / tps * 0.9f;
 		float gravPerTick =
 			getBaseGravity(player) * getGravityCoefficient(player) * scaledDt;
-		if (!Config::get().isVelocityUnroundingEnabled()) {
-			gravPerTick = std::round(gravPerTick * 1000.0f) / 1000.0f;
-		}
+		gravPerTick = quantizeYVelocity(gravPerTick);
 		return gravPerTick * tps;
 	}
 
