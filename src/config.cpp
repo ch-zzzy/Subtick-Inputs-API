@@ -25,6 +25,5 @@ namespace subtickinputs {
 $on_mod(Loaded) {
 	auto mod = Mod::get();
 	s_apiDisabled = mod->getSettingValue<bool>("api-disabled");
-	listenForSettingChanges<bool>(
-		"api-disabled", +[](bool val) { s_apiDisabled = val; });
+	listenForSettingChanges<bool>("api-disabled", +[](bool val) { s_apiDisabled = val; });
 }

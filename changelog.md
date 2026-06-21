@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.0
+
+- removed processInputs PlayerObject* param
+- fixed p2 input doing nothing in non-dual mode
+
 ## v0.1.3
 
 - rounds getGravPerTick to 3dp if velocity unrounding is not enabled

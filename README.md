@@ -36,7 +36,7 @@ Add it to your `mod.json`:
 ```json
 "dependencies": {
     "chizz.subtick-inputs-api": {
-        "version": ">=v0.0.0",
+        "version": ">=v0.2.0",
         "required": true
     }
 }
@@ -50,6 +50,10 @@ using namespace subtickinputs::prelude;
 
 // in your processQueuedButtons hook, per player:
 if (!useVanillaPhysics()) {
-    processInputs(player, dt);
+    processInputs(dt);
+    this->m_queuedButtons.clear();
 }
+GJBaseGameLayer::processQueuedButtons(dt, clearInputQueue);
 ```
+
+While the api is in beta (v0.x.x), minor version changes should be treated as breaking changes. While effort will be made for backwards compatibility, such as overloads, stability is not guaranteed.

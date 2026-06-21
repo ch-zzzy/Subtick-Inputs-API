@@ -65,12 +65,16 @@ namespace subtickinputs {
 
 	namespace inputs {
 
+		/// @brief this function is deprecated and will be removed in v1.0.0
+		[[deprecated("use processInputs(float dt) instead")]]
+		SI_API void processInputs(PlayerObject* player, float dt);
+
 		/// @brief processes this player's inputs from PlayLayer.m_queuedButtons
 		/// for the current tick: dispatches each via handleButton + updateJump(0)
 		/// and accumulates the sub-tick Y displacement adjustment
 		/// (impulse + accel terms) into m_yDispAdjustment for the midhook to apply
 		/// @param dt the tick duration (the dt passed to processQueuedButtons)
-		SI_API void processInputs(PlayerObject* player, float dt);
+		SI_API void processInputs(float dt);
 
 	} // namespace inputs
 

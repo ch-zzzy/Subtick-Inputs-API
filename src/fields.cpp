@@ -1,6 +1,6 @@
-#include "internal.hpp"
-
 #include <Geode/modify/PlayerObject.hpp>
+
+#include "internal.hpp"
 
 using namespace subtickinputs::internal;
 
@@ -14,13 +14,11 @@ class $modify(SIPlayerObject, PlayerObject) {
 namespace subtickinputs::internal {
 
 	double& getYDispField(PlayerObject* player) {
-		return static_cast<SIPlayerObject*>(player)
-			->m_fields->m_yDispAdjustment;
+		return static_cast<SIPlayerObject*>(player)->m_fields->m_yDispAdjustment;
 	}
 
 	std::vector<PendingWaveInput>& getPendingWaveField(PlayerObject* player) {
-		return static_cast<SIPlayerObject*>(player)
-			->m_fields->m_pendingWaveInputs;
+		return static_cast<SIPlayerObject*>(player)->m_fields->m_pendingWaveInputs;
 	}
 
 } // namespace subtickinputs::internal

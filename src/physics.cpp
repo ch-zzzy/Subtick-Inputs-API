@@ -33,8 +33,7 @@ namespace subtickinputs::physics {
 			double yVel = player->m_yVelocity;
 			bool upsideDown = player->m_isUpsideDown;
 			bool holding = player->m_jumpBuffered;
-			bool wrongDir =
-				(!upsideDown && yVel < 0) || (upsideDown && yVel > 0);
+			bool wrongDir = (!upsideDown && yVel < 0) || (upsideDown && yVel > 0);
 			bool fbugged = player->playerIsFallingBugged();
 			bool accel = player->m_isAccelerating; // this field name sucks
 			// im pretty sure m_isAccelerating is just true whenever yvel
@@ -79,16 +78,14 @@ namespace subtickinputs::physics {
 			return 0.0;
 		}
 
-		if (player->m_isRobot && player->m_maybeIsBoosted &&
-			player->m_jumpBuffered && !player->m_touchedPad &&
-			player->m_accelerationOrSpeed < 1.5f) {
+		if (player->m_isRobot && player->m_maybeIsBoosted && player->m_jumpBuffered &&
+			!player->m_touchedPad && player->m_accelerationOrSpeed < 1.5f) {
 			return 0.0;
 		}
 
 		double scaledDt = 60.0 / tps * 0.9;
 
-		double gravPerTick =
-			getBaseGravity(player) * getGravityCoefficient(player) * scaledDt;
+		double gravPerTick = getBaseGravity(player) * getGravityCoefficient(player) * scaledDt;
 
 		if (player->isFlying()) {
 			double sizeScale = (player->m_vehicleSize != 1.0f) ? 0.85 : 1.0;
