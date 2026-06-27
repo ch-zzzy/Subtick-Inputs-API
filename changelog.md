@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.1
+
+- added non-windows support, no velocity unrounding for those platforms for now
+
 ## v0.3.0
 
 - replaced the y-displacement midhook with a full reimplementation of PlayerObject::update, potential for non-windows support 😮 (backup incase it goes wrong)

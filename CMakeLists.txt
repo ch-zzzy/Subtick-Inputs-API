@@ -13,7 +13,7 @@ project(SubtickInputsAPI VERSION 1.0.0)
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-target_compile_definitions(${PROJECT_NAME} PRIVATE SubtickInputsAPI_EXPORTING)
+target_compile_definitions(${PROJECT_NAME} PRIVATE SubtickInputsAPI_    PORTING)
 
 if (NOT DEFINED ENV{GEODE_SDK})
     message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
@@ -24,3 +24,11 @@ endif()
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
 setup_geode_mod(${PROJECT_NAME})
+
+execute_process(
+    COMMAND ${CMAKE_COMMAND} 
+        -DMOD_JSON_FILE=${CMAKE_CURRENT_SOURCE_DIR}/mod.json
+        -DREADME_FILE=${CMAKE_CURRENT_SOURCE_DIR}/README.md
+        -P ${CMAKE_CURRENT_SOURCE_DIR}/UpdateReadmeVersion.cmake
+)
+

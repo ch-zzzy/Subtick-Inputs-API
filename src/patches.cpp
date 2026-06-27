@@ -49,11 +49,16 @@ static void toggleVelocityUnroundingPatches(bool enable) {
 
 	s_velocityUnroundingNops.toggle(enable);
 }
-// clang-format on
 
 namespace subtickinputs {
 	void Config::setVelocityUnroundingEnabled(bool v) {
+		#ifdef GEODE_IS_WINDOWS
 		m_velocityUnroundingEnabled = v;
 		toggleVelocityUnroundingPatches(v);
+		#else
+		m_velocityUnroundingEnabled = false;
+		log::warn("Velocity unrounding is currently not supported on this platform.");
+		#endif
 	}
 } // namespace subtickinputs
+// clang-format on
