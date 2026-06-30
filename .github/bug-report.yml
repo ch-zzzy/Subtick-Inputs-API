@@ -1,0 +1,60 @@
+name: Bug Report
+description: report a bug 😮
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## bug report
+
+  - type: textarea
+    id: mods-list
+    attributes:
+      label: List of Mods
+      description: go to geode settings then click copy mods list and paste it here
+      placeholder: cool chizz mods (and others maybe)
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: describe the issue with steps to reproduce it, especially if you have no screenshots or recordings
+      placeholder: your mod is the best! 😁
+    validations:
+      required: true
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Extra Media
+      description: if possible, put any images or videos related to the bug here
+    validations:
+      required: false
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: pick the platform you saw the bug occurring
+      options:
+      - "Windows"
+      - "Mac (Intel)"
+      - "Mac (Arm)"
+      - "Android (32-bit)"
+      - "Android (64-bit)"
+      - "iOS (JIT)"
+      - "iOS (Jitless)"
+      - "Linux"
+    validations:
+      required: true
+      
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: Subtick Inputs API bug
+      options:
+      - label: I verify that Subtick Inputs API, and whichever mods need it, are fully updated.
+    validations:
+      required: true
