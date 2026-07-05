@@ -1,4 +1,7 @@
 #include <SubtickInputs.hpp>
+#include <algorithm>
+#include <cmath>
+#include <string>
 
 #include "SIPlayerObject.hpp"
 
@@ -149,8 +152,8 @@ void SIPlayerObject::processPlayerTick(float dt) {
 		}
 
 		// m_yVelocityRelated3 = yOffset;
-		m_yVelocityRelated3 = yOffset += getYDispField(this);
-		getYDispField(this) = 0;
+		m_yVelocityRelated3 = yOffset += GET_PLAYER_FIELD(this, m_yDispAdjustment);
+		GET_PLAYER_FIELD(this, m_yDispAdjustment) = 0;
 		//
 
 		if (m_isGoingLeft && !m_isPlatformer) {

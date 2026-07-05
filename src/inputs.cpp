@@ -1,4 +1,6 @@
 #include <SubtickInputs.hpp>
+#include <algorithm>
+#include <cmath>
 
 #include "SIPlayerObject.hpp"
 
@@ -158,11 +160,12 @@ namespace subtickinputs::inputs {
 			}
 
 			if (playerState.isWave && player && !player->m_isDashing) {
-				getPendingWaveField(player).push_back({
-					ratio,
-					input.m_isPush,
-					static_cast<int>(input.m_button),
-				});
+				GET_PLAYER_FIELD(player, m_pendingWaveInputs)
+					.push_back({
+						ratio,
+						input.m_isPush,
+						static_cast<int>(input.m_button),
+					});
 				// this is processed in PlayerObject::update in hooks.cpp
 				continue;
 			}
@@ -206,10 +209,12 @@ namespace subtickinputs::inputs {
 		}
 
 		if (p1.playerObj) {
-			getYDispField(p1.playerObj) = p1.adjustedYVel * (p1.isWave ? p1.waveScale : scaledDt);
+			GET_PLAYER_FIELD(p1.playerObj, m_yDispAdjustment) =
+				p1.adjustedYVel * (p1.isWave ? p1.waveScale : scaledDt);
 		}
 		if (p2.playerObj) {
-			getYDispField(p2.playerObj) = p2.adjustedYVel * (p2.isWave ? p2.waveScale : scaledDt);
+			GET_PLAYER_FIELD(p2.playerObj, m_yDispAdjustment) =
+				p2.adjustedYVel * (p2.isWave ? p2.waveScale : scaledDt);
 		}
 
 		inputQueue.clear();

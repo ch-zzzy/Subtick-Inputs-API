@@ -17,6 +17,18 @@ using namespace geode::prelude;
 // clang-format on
 
 namespace subtickinputs {
+	struct InputHzChangedEvent final : public Event<InputHzChangedEvent, void(float)> {
+		using Event::Event;
+	};
+
+	struct InstantInputsChangedEvent final : public Event<InstantInputsChangedEvent, void(bool)> {
+		using Event::Event;
+	};
+
+	struct VelocityUnroundingChangedEvent final
+		: public Event<VelocityUnroundingChangedEvent, void(bool)> {
+		using Event::Event;
+	};
 
 	/// @brief whether to skip custom logic and use vanilla behavior
 	/// @return true if playLayer is null, api is disabled, first frame after
@@ -32,16 +44,12 @@ namespace subtickinputs {
 		float getInputHz() const {
 			return m_inputHz;
 		}
-		void setInputHz(float v) {
-			m_inputHz = v;
-		}
+		void setInputHz(float v);
 
 		bool isInstantInputsEnabled() const {
 			return m_instantInputsEnabled;
 		}
-		void setInstantInputsEnabled(bool v) {
-			m_instantInputsEnabled = v;
-		}
+		void setInstantInputsEnabled(bool v);
 
 		bool isVelocityUnroundingEnabled() const {
 			return m_velocityUnroundingEnabled;
@@ -58,6 +66,21 @@ namespace subtickinputs {
 		bool m_instantInputsEnabled = false;
 		bool m_velocityUnroundingEnabled = false;
 	};
+
+	template <class Callback>
+	ListenerHandle* listenForInputHzChanges(Callback&& cb) {
+		return InputHzChangedEvent().listen(std::forward<Callback>(cb)).leak();
+	}
+
+	template <class Callback>
+	ListenerHandle* listenForInstantInputsChanges(Callback&& cb) {
+		return InstantInputsChangedEvent().listen(std::forward<Callback>(cb)).leak();
+	}
+
+	template <class Callback>
+	ListenerHandle* listenForVelocityUnroundingChanges(Callback&& cb) {
+		return VelocityUnroundingChangedEvent().listen(std::forward<Callback>(cb)).leak();
+	}
 
 	namespace physics {
 

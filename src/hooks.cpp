@@ -1,6 +1,8 @@
 // there's a hook in inputs.cpp as well
 
 #include <SubtickInputs.hpp>
+#include <algorithm>
+#include <limits>
 
 #include "SIPlayerObject.hpp"
 
@@ -27,15 +29,16 @@ namespace subtickinputs {
 // copied from cbf
 #ifdef GEODE_IS_WINDOWS
 #include <Geode/modify/CCEGLView.hpp>
+#include <winuser.h>
 class $modify(CCEGLView) {
 	void pollEvents() {
 		PlayLayer* playLayer = PlayLayer::get();
-		CCNode* parent;
+		CCNode* parent = playLayer ? playLayer->getParent() : nullptr;
 
 		// clang-format off
 		if (!GetFocus()
 			|| !playLayer
-			|| !(parent = playLayer->getParent())
+			|| !parent
 			|| parent->getChildByType<PauseLayer>(0)
 			|| playLayer->getChildByType<EndLevelLayer>(0)
 			|| playLayer->m_playerDied)
@@ -52,11 +55,11 @@ class $modify(CCEGLView) {
 class $modify(CCScheduler) {
 	void update(float dt) {
 		PlayLayer* playLayer = PlayLayer::get();
-		CCNode* parent;
+		CCNode* parent = playLayer ? playLayer->getParent() : nullptr;
 
 		// clang-format off
 		if (!playLayer
-			|| !(parent = playLayer->getParent())
+			|| !parent
 			|| parent->getChildByType<PauseLayer>(0)
 			|| playLayer->getChildByType<EndLevelLayer>(0)
 			|| playLayer->m_playerDied)
@@ -93,7 +96,7 @@ void SIPlayerObject::update(float dt) {
 		return;
 	}
 
-	auto& pendingWaveInputs = getPendingWaveField(this);
+	auto& pendingWaveInputs = GET_PLAYER_FIELD(this, m_pendingWaveInputs);
 
 	if (pendingWaveInputs.empty() || !this->m_isDart || this->m_isDashing) {
 		pendingWaveInputs.clear();

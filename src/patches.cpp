@@ -1,4 +1,9 @@
 #include <SubtickInputs.hpp>
+#include <cstddef>
+#include <cstdint>
+#include <initializer_list>
+#include <tuple>
+#include <vector>
 
 struct PatchGroup {
 	std::vector<Patch*> appliedPatches;
@@ -52,13 +57,14 @@ static void toggleVelocityUnroundingPatches(bool enable) {
 
 namespace subtickinputs {
 	void Config::setVelocityUnroundingEnabled(bool v) {
-		#ifdef GEODE_IS_WINDOWS
+	#ifndef GEODE_IS_WINDOWS
+		if (v) log::warn("Velocity unrounding is currently not supported on this platform.");
+		v = false;
+	#endif
+		if (m_velocityUnroundingEnabled == v) return;
 		m_velocityUnroundingEnabled = v;
 		toggleVelocityUnroundingPatches(v);
-		#else
-		m_velocityUnroundingEnabled = false;
-		log::warn("Velocity unrounding is currently not supported on this platform.");
-		#endif
+		VelocityUnroundingChangedEvent().send(v);
 	}
 } // namespace subtickinputs
 // clang-format on

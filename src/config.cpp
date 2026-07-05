@@ -13,6 +13,18 @@ namespace subtickinputs {
 		return s_apiDisabled;
 	}
 
+	void Config::setInputHz(float v) {
+		if (m_inputHz == v) return;
+		m_inputHz = v;
+		InputHzChangedEvent().send(v);
+	}
+
+	void Config::setInstantInputsEnabled(bool v) {
+		if (m_instantInputsEnabled == v) return;
+		m_instantInputsEnabled = v;
+		InstantInputsChangedEvent().send(v);
+	}
+
 } // namespace subtickinputs
 
 $on_mod(Loaded) {
