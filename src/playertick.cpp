@@ -1,3 +1,4 @@
+// NOLINTBEGIN
 #include <SubtickInputs.hpp>
 #include <algorithm>
 #include <cmath>
@@ -411,3 +412,4 @@ static std::string getFrameForStreak(ShipStreak type, float time) {
 
 	return result;
 }
+// NOLINTEND

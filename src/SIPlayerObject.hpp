@@ -14,6 +14,9 @@ class $modify(SIPlayerObject, PlayerObject) {
 	struct Fields {
 		double m_yDispAdjustment = 0.0;
 		std::vector<subtickinputs::fields::PendingWaveInput> m_pendingWaveInputs;
+		bool m_didWaveSplit = false;
+		float m_rotationDelta = 0.0f;
+		CCPoint m_preTickPosition;
 	};
 
 	static void onModify(auto& self) {
@@ -21,6 +24,7 @@ class $modify(SIPlayerObject, PlayerObject) {
 	}
 
 	void update(float dt);
+	void updateRotation(float t);
 	void setYVelocity(double velocity, int type);
 	void processPlayerTick(float dt);
 };

@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.0
+
+- added listeners for the configs similar to geode's listenForSettingChanges
+- added updateRotation for tick splits, might fix some wave stuff, might not
+
 ## v0.3.1
 
 - added non-windows support, no velocity unrounding for those platforms for now

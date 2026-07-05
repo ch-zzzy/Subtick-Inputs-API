@@ -1,4 +1,4 @@
-// there's a hook in inputs.cpp as well
+// there's a hook at the bottom of inputs.cpp as well
 
 #include <SubtickInputs.hpp>
 #include <algorithm>
@@ -92,6 +92,7 @@ class $modify(GJBaseGameLayer) {
 // doesn't cause gravity issues since wave velocity is always constant
 void SIPlayerObject::update(float dt) {
 	if (useVanilla()) {
+		GET_PLAYER_FIELD(this, m_didWaveSplit) = false;
 		PlayerObject::update(dt);
 		return;
 	}
@@ -100,6 +101,7 @@ void SIPlayerObject::update(float dt) {
 
 	if (pendingWaveInputs.empty() || !this->m_isDart || this->m_isDashing) {
 		pendingWaveInputs.clear();
+		GET_PLAYER_FIELD(this, m_didWaveSplit) = false;
 		processPlayerTick(dt);
 		return;
 	}
@@ -123,6 +125,7 @@ void SIPlayerObject::update(float dt) {
 		}
 
 		playLayer->checkCollisions(this, 0.0f, true);
+		PlayerObject::updateRotation(segment * dt);
 		this->resetCollisionLog(false);
 
 		playLayer->handleButton(input.m_isPush, input.m_button, this->isPlayer1());
@@ -132,11 +135,26 @@ void SIPlayerObject::update(float dt) {
 	}
 	pendingWaveInputs.clear();
 
-	PlayerObject::update((1.0 - lastRatio) * dt);
+	float remainingDelta = static_cast<float>((1.0 - lastRatio) * dt);
+	PlayerObject::update(remainingDelta);
 
-	this->m_lastPosition = preTickPosition;
+	GET_PLAYER_FIELD(this, m_rotationDelta) = remainingDelta;
+	GET_PLAYER_FIELD(this, m_preTickPosition) = preTickPosition;
+	GET_PLAYER_FIELD(this, m_didWaveSplit) = true;
+}
 
-	// TODO: updateRotation thing
+void SIPlayerObject::updateRotation(float dt) {
+	auto& didWaveSplit = GET_PLAYER_FIELD(this, m_didWaveSplit);
+
+	if (!didWaveSplit) {
+		PlayerObject::updateRotation(dt);
+		return;
+	}
+
+	didWaveSplit = false;
+
+	PlayerObject::updateRotation(GET_PLAYER_FIELD(this, m_rotationDelta));
+	this->m_lastPosition = GET_PLAYER_FIELD(this, m_preTickPosition);
 }
 
 void SIPlayerObject::setYVelocity(double velocity, int type) {
