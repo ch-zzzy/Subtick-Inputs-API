@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.1
+
+- fixed listeners' respective events
+
 ## v0.4.0
 
 - added listeners for the configs similar to geode's listenForSettingChanges

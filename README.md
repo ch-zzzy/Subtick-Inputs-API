@@ -84,7 +84,7 @@ Add it to your `mod.json`:
 ```json
 "dependencies": {
     "chizz.subtick-inputs-api": {
-        "version": ">=v0.4.0",
+        "version": ">=v0.4.1",
         "required": true
     }
 }

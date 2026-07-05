@@ -17,16 +17,16 @@ using namespace geode::prelude;
 // clang-format on
 
 namespace subtickinputs {
-	struct InputHzChangedEvent final : public Event<InputHzChangedEvent, void(float)> {
+	struct InputHzChangedEvent final : public Event<InputHzChangedEvent, bool(float)> {
 		using Event::Event;
 	};
 
-	struct InstantInputsChangedEvent final : public Event<InstantInputsChangedEvent, void(bool)> {
+	struct InstantInputsChangedEvent final : public Event<InstantInputsChangedEvent, bool(bool)> {
 		using Event::Event;
 	};
 
 	struct VelocityUnroundingChangedEvent final
-		: public Event<VelocityUnroundingChangedEvent, void(bool)> {
+		: public Event<VelocityUnroundingChangedEvent, bool(bool)> {
 		using Event::Event;
 	};
 
@@ -67,19 +67,40 @@ namespace subtickinputs {
 		bool m_velocityUnroundingEnabled = false;
 	};
 
-	template <class Callback>
-	ListenerHandle* listenForInputHzChanges(Callback&& cb) {
-		return InputHzChangedEvent().listen(std::forward<Callback>(cb)).leak();
+	ListenerHandle* listenForInputHzChanges(auto callback) {
+		static_assert(std::copy_constructible<decltype(callback)>,
+			"listenForInputHzChanges requires a copyable callback");
+
+		return InputHzChangedEvent()
+			.listen([callback](float hz) {
+				callback(hz);
+				return ListenerResult::Propagate;
+			})
+			.leak();
 	}
 
-	template <class Callback>
-	ListenerHandle* listenForInstantInputsChanges(Callback&& cb) {
-		return InstantInputsChangedEvent().listen(std::forward<Callback>(cb)).leak();
+	ListenerHandle* listenForInstantInputsChanges(auto callback) {
+		static_assert(std::copy_constructible<decltype(callback)>,
+			"listenForInstantInputsChanges requires a copyable callback");
+
+		return InstantInputsChangedEvent()
+			.listen([callback](bool enabled) {
+				callback(enabled);
+				return ListenerResult::Propagate;
+			})
+			.leak();
 	}
 
-	template <class Callback>
-	ListenerHandle* listenForVelocityUnroundingChanges(Callback&& cb) {
-		return VelocityUnroundingChangedEvent().listen(std::forward<Callback>(cb)).leak();
+	ListenerHandle* listenForVelocityUnroundingChanges(auto callback) {
+		static_assert(std::copy_constructible<decltype(callback)>,
+			"listenForVelocityUnroundingChanges requires a copyable callback");
+
+		return VelocityUnroundingChangedEvent()
+			.listen([callback](bool enabled) {
+				callback(enabled);
+				return ListenerResult::Propagate;
+			})
+			.leak();
 	}
 
 	namespace physics {
