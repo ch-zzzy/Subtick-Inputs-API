@@ -41,6 +41,8 @@ namespace subtickinputs {
 
 		bool isApiDisabled() const;
 
+		bool isDebugModeEnabled() const;
+
 		float getInputHz() const {
 			return m_inputHz;
 		}

@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.2
+
+- (potentially) fixed some clicks being weird on the ground
+- added debug logging
+
 ## v0.4.1
 
 - fixed listeners' respective events
@@ -27,7 +32,7 @@
 
 ## v0.1.3
 
-- rounds getGravPerTick to 3dp if velocity unrounding is not enabled
+- rounded getGravPerTick to 3dp if velocity unrounding is not enabled
 
 ## v0.1.2
 

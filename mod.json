@@ -8,7 +8,7 @@
 	},
 	"id": "chizz.subtick-inputs-api",
 	"name": "Subtick Inputs API",
-	"version": "v0.4.1",
+	"version": "v0.4.2",
 	"developer": "chizz",
 	"description": "API for devs who want subtick input handling.",
 	"tags": [
@@ -22,6 +22,12 @@
 			"default": false,
 			"name": "Disable Subtick Inputs (Master Switch)",
 			"description": "Disables all subtick input features globally. Any dependent mods should (hopefully) revert to vanilla behavior."
+		},
+		"debug-mode": {
+			"type": "bool",
+			"default": false,
+			"name": "Debug Mode",
+			"description": "Enables logging for debugging purposes. Does not alter any functionality."
 		}
 	},
 	"api": {

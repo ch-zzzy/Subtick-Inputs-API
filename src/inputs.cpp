@@ -67,7 +67,9 @@ static double getGravPerTick(PlayerObject* player, float tps) {
 	}
 
 	if (player->m_isOnGround) {
-		return 0.0;
+		// return 0.0;
+		// not too sure why i added this
+		// i hope removing it doesn't backfire
 	}
 
 	if (player->m_isRobot && player->m_maybeIsBoosted && player->m_jumpBuffered &&
@@ -199,12 +201,26 @@ namespace subtickinputs::inputs {
 				double postDv = getGravPerTick(p1.playerObj, tps);
 
 				p1.adjustedYVel += ratio * ((preVel1 - postVel) + (preDv1 - postDv));
+
+				if (Config::get().isDebugModeEnabled()) {
+					log::debug(
+						"p1 preVel: {}, postVel: {}, preDv: {}, postDv: {}, ratio: {}, "
+						"adjustedYVel: {}",
+						preVel1, postVel, preDv1, postDv, ratio, p1.adjustedYVel);
+				}
 			}
 			if (p2.playerObj) {
 				double postVel = p2.playerObj->m_yVelocity;
 				double postDv = getGravPerTick(p2.playerObj, tps);
 
 				p2.adjustedYVel += ratio * ((preVel2 - postVel) + (preDv2 - postDv));
+
+				if (Config::get().isDebugModeEnabled()) {
+					log::debug(
+						"p2 preVel: {}, postVel: {}, preDv: {}, postDv: {}, ratio: {}, "
+						"adjustedYVel: {}",
+						preVel2, postVel, preDv2, postDv, ratio, p2.adjustedYVel);
+				}
 			}
 		}
 

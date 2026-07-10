@@ -1,6 +1,7 @@
 #include <SubtickInputs.hpp>
 
 static bool s_apiDisabled = false;
+static bool s_debugModeEnabled = false;
 
 namespace subtickinputs {
 
@@ -11,6 +12,10 @@ namespace subtickinputs {
 
 	bool Config::isApiDisabled() const {
 		return s_apiDisabled;
+	}
+
+	bool Config::isDebugModeEnabled() const {
+		return s_debugModeEnabled;
 	}
 
 	void Config::setInputHz(float v) {
@@ -28,7 +33,11 @@ namespace subtickinputs {
 } // namespace subtickinputs
 
 $on_mod(Loaded) {
-	auto mod = Mod::get();
+	auto* mod = Mod::get();
+
 	s_apiDisabled = mod->getSettingValue<bool>("api-disabled");
 	listenForSettingChanges<bool>("api-disabled", +[](bool val) { s_apiDisabled = val; });
+
+	s_debugModeEnabled = mod->getSettingValue<bool>("debug-mode");
+	listenForSettingChanges<bool>("debug-mode", +[](bool val) { s_debugModeEnabled = val; });
 }
