@@ -1,8 +1,8 @@
 # Changelog
 
-## v0.4.2
+## v0.5.0
 
-- (potentially) fixed some clicks being weird on the ground
+- restructured the input processing model
 - added debug logging
 
 ## v0.4.1
