@@ -4,6 +4,7 @@
 
 - restructured the input processing model
 - added debug logging
+- bump geode version
 
 ## v0.4.1
 
