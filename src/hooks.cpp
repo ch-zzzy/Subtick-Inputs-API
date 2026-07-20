@@ -1,4 +1,4 @@
-// there's a hook at the bottom of inputs.cpp as well
+// there's a couple hooks at the bottom of inputs.cpp as well
 
 #include <SubtickInputs.hpp>
 #include <algorithm>

@@ -29,11 +29,12 @@ A `prelude` sub-namespace is provided to pull in the common symbols at once.
 
 `Config::get()` returns the shared instance.
 
+- `isApiDisabled()`: master-switch state for the api's features, already checked in `useVanilla()`
+- `isDebugModeEnabled()`: whether or not the debug mode setting is enabled and the api is logging
 - `getInputHz()` / `setInputHz(float)`: input check rate (overriden by Instantaneous Input)
 - `isInstantInputsEnabled()` / `setInstantInputsEnabled()`: whether input processing is
 snapped to the input check rate grid, or happens immediately
 - `isVelocityUnroundingEnabled()` / `setVelocityUnroundingEnabled(bool)`: whether y-velocity 3dp rounding is bypassed
-- `isApiDisabled()`: master-switch state, already checked in `useVanilla()`
 
 ### `Config` listeners
 
@@ -84,7 +85,7 @@ Add it to your `mod.json`:
 ```json
 "dependencies": {
     "chizz.subtick-inputs-api": {
-        "version": ">=v0.5.0",
+        "version": ">=v0.5.1",
         "required": true
     }
 }

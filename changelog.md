@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.1
+
+-
+
 ## v0.5.0
 
 - restructured the input processing model

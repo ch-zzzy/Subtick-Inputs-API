@@ -1,18 +1,22 @@
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/PlayerObject.hpp>
 #include <SubtickInputs.hpp>
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 
 #include "SIPlayerObject.hpp"
 
 using namespace subtickinputs;
 using namespace subtickinputs::fields;
 
+static bool s_isLastTickOfFrame = true;
 static bool s_updateJumpCalledP1 = false;
 static bool s_updateJumpCalledP2 = false;
 
 static float getBaseGravity(PlayerObject* player) {
 	if (player->isInBasicMode()) {
-		return player->m_gravity * player->m_gravityMod;
+		return static_cast<float>(player->m_gravity) * player->m_gravityMod;
 	} else {
 		return 0.958199f * player->m_gravityMod;
 	}
@@ -48,9 +52,13 @@ static float getGravityCoefficient(PlayerObject* player) {
 	}
 
 	if (player->m_isBall) return 0.6f;
+
 	if (player->m_isDart) return 0.0f;
+
 	if (player->m_isRobot) return 0.9f;
+
 	if (player->m_isSpider) return 0.6f;
+
 	if (player->m_isSwing) {
 		if (player->m_vehicleSize != 1.0f)
 			return 0.6f;
@@ -61,7 +69,7 @@ static float getGravityCoefficient(PlayerObject* player) {
 	return 1.0f;
 }
 
-static double getGravPerTick(PlayerObject* player, float tps) {
+static double getGravPerTick(PlayerObject* player, double scaledDt) {
 	if (player->m_isDart) {
 		return 0.0;
 	}
@@ -74,8 +82,6 @@ static double getGravPerTick(PlayerObject* player, float tps) {
 		!player->m_touchedPad && player->m_accelerationOrSpeed < 1.5f) {
 		return 0.0;
 	}
-
-	double scaledDt = 60.0 / tps * 0.9;
 
 	double gravPerTick = getBaseGravity(player) * getGravityCoefficient(player) * scaledDt;
 
@@ -105,13 +111,13 @@ namespace subtickinputs::inputs {
 
 	void processInputs(float dt) {
 		PlayLayer* playLayer = PlayLayer::get();
-		auto& config = Config::get();
 		if (!playLayer) return;
 
-		double tickDuration = dt;
-		if (tickDuration <= 0.0) return;
+		if (dt <= 0.0f) return;
 
 		auto& inputQueue = playLayer->m_queuedButtons;
+
+		auto& config = Config::get();
 
 		double tps = 1.0 / dt;
 		double scaledDt = 60.0 / tps * 0.9;
@@ -129,11 +135,23 @@ namespace subtickinputs::inputs {
 		double adjustedYVel1 = 0.0;
 		double adjustedYVel2 = 0.0;
 
+		double tickDuration = dt;
+		double tickStartTime = playLayer->m_timestamp;
+		double tickEndTime = tickStartTime + tickDuration;
+
+		bool processEntireQueue = s_isLastTickOfFrame;
+
+		size_t processedCount = 0;
+
 		for (auto& input : inputQueue) {
+			if (!processEntireQueue && input.m_timestamp >= tickEndTime) {
+				break;
+			}
+			processedCount++;
+
 			PlayerObject* player = input.m_isPlayer2 ? p2 : p1;
 
 			double currentTime = input.m_timestamp;
-			double tickStartTime = playLayer->m_timestamp;
 			double ratio = (currentTime - tickStartTime) / tickDuration;
 			ratio = std::clamp(ratio, 0.0, 1.0);
 
@@ -157,10 +175,10 @@ namespace subtickinputs::inputs {
 			}
 
 			double preVel1 = p1 ? p1->m_yVelocity : 0.0;
-			double preDv1 = p1 ? getGravPerTick(p1, tps) : 0.0;
+			double preDv1 = p1 ? getGravPerTick(p1, scaledDt) : 0.0;
 
 			double preVel2 = p2 ? p2->m_yVelocity : 0.0;
-			double preDv2 = p2 ? getGravPerTick(p2, tps) : 0.0;
+			double preDv2 = p2 ? getGravPerTick(p2, scaledDt) : 0.0;
 
 			s_updateJumpCalledP1 = false;
 			s_updateJumpCalledP2 = false;
@@ -174,7 +192,7 @@ namespace subtickinputs::inputs {
 				if (!s_updateJumpCalledP1) p1->updateJump(0.0f);
 
 				double postVel = p1->m_yVelocity;
-				double postDv = getGravPerTick(p1, tps);
+				double postDv = getGravPerTick(p1, scaledDt);
 
 				adjustedYVel1 += ratio * ((preVel1 - postVel) + (preDv1 - postDv));
 
@@ -190,7 +208,7 @@ namespace subtickinputs::inputs {
 				if (!s_updateJumpCalledP2) p2->updateJump(0.0f);
 
 				double postVel = p2->m_yVelocity;
-				double postDv = getGravPerTick(p2, tps);
+				double postDv = getGravPerTick(p2, scaledDt);
 
 				adjustedYVel2 += ratio * ((preVel2 - postVel) + (preDv2 - postDv));
 
@@ -217,10 +235,17 @@ namespace subtickinputs::inputs {
 			}
 		}
 
-		inputQueue.clear();
+		inputQueue.erase(inputQueue.begin(), inputQueue.begin() + processedCount);
 	}
 
 } // namespace subtickinputs::inputs
+
+class $modify(GJBaseGameLayer) {
+	void processCommands(float dt, bool isHalfTick, bool isLastTick) {
+		s_isLastTickOfFrame = isLastTick;
+		GJBaseGameLayer::processCommands(dt, isHalfTick, isLastTick);
+	}
+};
 
 class $modify(PlayerObject) {
 	void updateJump(float dt) {
