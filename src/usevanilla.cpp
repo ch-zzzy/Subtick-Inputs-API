@@ -6,7 +6,7 @@ static bool s_firstFrame = true;
 
 bool useVanilla() {
 	// clang-format off
-	PlayLayer* playLayer = PlayLayer::get();
+	auto* playLayer = PlayLayer::get();
 	return !playLayer
 	|| !Config::get().isApiEnabled()
 	|| s_firstFrame
@@ -22,7 +22,7 @@ bool useVanilla() {
 #include <winuser.h>
 class $modify(CCEGLView) {
 	void pollEvents() {
-		PlayLayer* playLayer = PlayLayer::get();
+		auto* playLayer = PlayLayer::get();
 		CCNode* parent = playLayer ? playLayer->getParent() : nullptr;
 
 		// clang-format off
@@ -44,7 +44,7 @@ class $modify(CCEGLView) {
 #include <Geode/modify/CCScheduler.hpp>
 class $modify(CCScheduler) {
 	void update(float dt) {
-		PlayLayer* playLayer = PlayLayer::get();
+		auto* playLayer = PlayLayer::get();
 		CCNode* parent = playLayer ? playLayer->getParent() : nullptr;
 
 		// clang-format off

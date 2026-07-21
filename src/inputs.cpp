@@ -110,7 +110,7 @@ namespace subtickinputs::inputs {
 	}
 
 	void processInputs(float dt) {
-		PlayLayer* playLayer = PlayLayer::get();
+		auto* playLayer = PlayLayer::get();
 		if (!playLayer) return;
 
 		if (dt <= 0.0f) return;
@@ -249,7 +249,7 @@ class $modify(GJBaseGameLayer) {
 
 class $modify(PlayerObject) {
 	void updateJump(float dt) {
-		PlayLayer* playLayer = PlayLayer::get();
+		auto* playLayer = PlayLayer::get();
 		if (playLayer) {
 			if (this == playLayer->m_player1)
 				s_updateJumpCalledP1 = true;

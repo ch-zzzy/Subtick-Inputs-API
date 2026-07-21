@@ -8,6 +8,7 @@ using namespace subtickinputs;
 static PatchGroup s_velocityUnroundingNops;
 
 // clang-format off
+
 static void toggleVelocityUnroundingPatches(bool enable) {
 	if (s_velocityUnroundingNops.appliedPatches.empty()) {
 		s_velocityUnroundingNops.init({

@@ -59,6 +59,18 @@ $on_mod(Loaded) {
 	localSettingInit(s_cbsForceDisabled, "cbs-disabled", [](bool val) {
 		s_cbsForceDisabled = val;
 		disableApiIfCbsUnforced();
+
+		auto* playLayer = PlayLayer::get();
+		if (playLayer) {
+			if (!s_cbsForceDisabled) {
+				auto* gameManager = GameManager::get();
+				playLayer->m_clickBetweenSteps = gameManager->getGameVariable("0177");
+				playLayer->m_clickOnSteps = gameManager->getGameVariable("0176");
+			} else {
+				playLayer->m_clickBetweenSteps = false;
+				playLayer->m_clickOnSteps = false;
+			}
+		}
 	});
 
 	disableApiIfCbsUnforced();
