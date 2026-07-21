@@ -29,7 +29,8 @@ A `prelude` sub-namespace is provided to pull in the common symbols at once.
 
 `Config::get()` returns the shared instance.
 
-- `isApiDisabled()`: master-switch state for the api's features, already checked in `useVanilla()`
+- `isApiEnabled()`: master-switch state for the api's features, already checked in `useVanilla()`
+    > `isApiDisabled()` is the old function and is deprecated; it will be removed in v1.0.0.
 - `isDebugModeEnabled()`: whether or not the debug mode setting is enabled and the api is logging
 - `getInputHz()` / `setInputHz(float)`: input check rate (overriden by Instantaneous Input)
 - `isInstantInputsEnabled()` / `setInstantInputsEnabled()`: whether input processing is
@@ -69,7 +70,7 @@ Returns `true` when the API should let vanilla run without modification: API dis
 null PlayLayer, first frame after pause/death/init, player died, platformer mode, or
 RobTop's replay mode. Dependent mods should check this before calling any API function.
 
-> `physics::useVanillaPhysics()` is the old name for this and is deprecated, it will be
+> `physics::useVanillaPhysics()` is the old name for this and is deprecated; it will be
 > removed in v1.0.0.
 
 ### `inputs` namespace
@@ -85,7 +86,7 @@ Add it to your `mod.json`:
 ```json
 "dependencies": {
     "chizz.subtick-inputs-api": {
-        "version": ">=v0.5.1",
+        "version": ">=v0.6.0",
         "required": true
     }
 }

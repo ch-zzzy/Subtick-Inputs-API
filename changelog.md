@@ -1,8 +1,12 @@
 # Changelog
 
-## v0.5.1
+## v0.6.0
 
--
+- reworked processInputs again, should hopefully fix the mod doing effectively nothing below 240fps (which kinda defeated the purpose)
+- added a setting to force disable CBS+COS from within the API, so dependent mods don't need to handle it
+- added isApiEnabled(), deprecated isApiDisabled()
+- changed gravity precision to better match vanilla (i'll thoroughly check this someday to find other issues)
+- lots of refactoring
 
 ## v0.5.0
 

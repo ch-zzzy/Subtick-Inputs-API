@@ -8,7 +8,7 @@
 	},
 	"id": "chizz.subtick-inputs-api",
 	"name": "Subtick Inputs API",
-	"version": "v0.5.1",
+	"version": "v0.6.0",
 	"developer": "chizz",
 	"description": "API for devs who want subtick input handling.",
 	"tags": [
@@ -17,11 +17,19 @@
 		"cheat"
 	],
 	"settings": {
-		"api-disabled": {
+		"api-enabled": {
 			"type": "bool",
-			"default": false,
-			"name": "Disable Subtick Inputs (Master Switch)",
-			"description": "Disables all subtick input features globally. Any dependent mods should (hopefully) revert to vanilla behavior."
+			"default": true,
+			"name": "Enable Subtick Inputs (Master Switch)",
+			"description": "Disabling this disables all subtick input features globally. Any dependent mods should (hopefully) revert to vanilla behavior.",
+			"enable-if": "cbs-disabled",
+			"enable-if-description": "CBS and COS must be force disabled to use this API (see setting below)."
+		},
+		"cbs-disabled": {
+			"type": "bool",
+			"default": true,
+			"name": "Force disable Click On Steps and Click Between Steps",
+			"description": "When this check is enabled, CBS and COS will be force disabled for every level, regardless of the vanilla setting."
 		},
 		"debug-mode": {
 			"type": "bool",

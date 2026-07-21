@@ -1,6 +1,6 @@
 # Subtick Inputs API
 
-API for developers who want subtick input handling. This mod does not do anything on its own and is intended to be used by other mods such as Superb Input Precision.
+API for developers who want subtick input handling. This mod does not do anything on its own (except force disabling CBS/COS) and is intended to be used by other mods such as Superb Input Precision.
 
 <mod:chizz.superb-input-precision>
 

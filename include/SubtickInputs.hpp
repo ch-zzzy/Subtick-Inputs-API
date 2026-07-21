@@ -39,7 +39,11 @@ namespace subtickinputs {
 		public:
 		static Config& get();
 
+		/// @brief this function is deprecated and will be removed in v1.0.0
+		[[deprecated("use !isApiEnabled() instead")]]
 		bool isApiDisabled() const;
+
+		bool isApiEnabled() const;
 
 		bool isDebugModeEnabled() const;
 
