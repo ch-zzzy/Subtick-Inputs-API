@@ -1,20 +1,20 @@
 #include <SubtickInputs.hpp>
 
-using namespace subtickinputs;
-
 static bool s_firstFrame = true;
 
-bool useVanilla() {
-	// clang-format off
-	auto* playLayer = PlayLayer::get();
-	return !playLayer
-	|| !Config::get().isApiEnabled()
-	|| s_firstFrame
-	|| playLayer->m_playerDied
-	|| playLayer->m_isPlatformer
-	|| playLayer->m_useReplay;
-	// clang-format on
-}
+namespace subtickinputs {
+	bool useVanilla() {
+		// clang-format off
+		auto* playLayer = PlayLayer::get();
+		return !playLayer
+		|| !Config::get().isApiEnabled()
+		|| s_firstFrame
+		|| playLayer->m_playerDied
+		|| playLayer->m_isPlatformer
+		|| playLayer->m_useReplay;
+		// clang-format on
+	}
+} // namespace subtickinputs
 
 // copied from cbf
 #ifdef GEODE_IS_WINDOWS
